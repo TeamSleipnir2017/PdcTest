@@ -34,6 +34,17 @@
 #define USART_TXD0 PIO_PA11A_TXD0
 #define USART_PERIPHERAL PIOA
 
+void waste_of_time_delay(uint32_t delay)
+{
+	for (uint32_t i = 0; i < delay; i++)
+	{
+		for (uint32_t j = 0; j < 1978; j++)
+		{
+			__asm__("nop");
+		}
+	}
+}
+
 int main (void)
 {
 	sysclk_init();
@@ -76,11 +87,23 @@ int main (void)
 	pdc_tx_init(PdcInterface, &PdcPacket, NULL);
 	pdc_enable_transfer(PdcInterface, PERIPH_PTCR_TXTEN);
 
+	uint8_t C[2] = {'a','b'};
 
+	pdc_packet_t PdcPacketRx = {
+		.ul_addr = &C,
+		.ul_size = 2
+	};
+
+	pdc_rx_init(PdcInterface, &PdcPacketRx, NULL);
+	pdc_enable_transfer(PdcInterface, PERIPH_PTCR_RXTEN);
 
 
 	while(1)
 	{
+		waste_of_time_delay(10000);
+		usart_putchar(USART0, C[0]);
+		waste_of_time_delay(10000);
+		usart_putchar(USART0, C[1]);
 		//usart_putchar(USART0, 'a');
 	}
 	/* Insert application code here, after the board has been initialized. */
