@@ -34,7 +34,7 @@
 #define USART_TXD0 PIO_PA11A_TXD0
 #define USART_PERIPHERAL PIOA
 
-//usless comment for git
+
 
 void waste_of_time_delay(uint32_t delay)
 {
